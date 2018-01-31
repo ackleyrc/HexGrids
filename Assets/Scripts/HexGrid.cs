@@ -27,9 +27,6 @@ public class Cube
 
     public int s { get { return vec3.y; } }
 
-    // TODO: Implement functions for IEquatable 
-    //      See https://answers.unity.com/questions/950867/multidimensional-array-vs-dictionary-performance.html
-
     public static Cube operator +(Cube a, Cube b)
     {
         return new Cube(a.q + b.q, a.r + b.r, a.s + b.s);
@@ -60,5 +57,8 @@ public class Cube
         return string.Format ("Cube(" + q + ", " + r + ", " + s + ")");
     }
     
-    // GetHashCode
+    public override int GetHashCode()
+    {
+        return new Vector2Int(q, r).GetHashCode();   
+    }
 }
