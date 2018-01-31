@@ -13,6 +13,11 @@ public class Cube
 
     public Cube(int q, int r, int s)
     {
+        if (q + r + s != 0)
+        {
+            Debug.LogError("The provided coordinates (" + q + ", " + r + ", " + s") do not form a canonical coordinate set. Coordinate values must satisfy the criteria q + r + s == 0.");
+        }
+        
         this.vec3 = new Vector3Int(q, s, r);
     }
 
@@ -25,15 +30,35 @@ public class Cube
     // TODO: Implement functions for IEquatable 
     //      See https://answers.unity.com/questions/950867/multidimensional-array-vs-dictionary-performance.html
 
-    // operator +
+    public static Cube operator +(Cube a, Cube b)
+    {
+        return new Cube(a.q + b.q, a.r + b.r, a.s + b.s);
+    }
+    
+    public static Cube operator -(Cube a, Cube b)
+    {
+        return new Cube(a.q - b.q, a.r - b.r, a.s - b.s);
+    }
+    
+    public bool Equals(Cube other)
+    {
+        return other.q == this.q && other.r == this.r && other.s == this.s;
+    }
+    
+    public static Cube operator ==(Cube a, Cube b)
+    {
+        return a.Equals(b);
+    }
 
-    // bool Equals(other)
-
-    // operator ==
-
-    // operator !=
-
+    public static Cube operator !=(Cube a, Cube b)
+    {
+        return !a.Equals(b);
+    }
+    
+    public override string ToString()
+    {
+        return string.Format ("Cube(" + q + ", " + r + ", " + s + ")");
+    }
+    
     // GetHashCode
-
-    // ToString()
 }
