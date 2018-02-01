@@ -17,7 +17,9 @@ public class Cube
     {
         if (q + r + s != 0)
         {
-            Debug.LogError("The provided coordinates (" + q + ", " + r + ", " + s") do not form a canonical coordinate set. Coordinate values must satisfy the criteria q + r + s == 0.");
+            Debug.LogError("The provided coordinates (" + q + ", " + r + ", " + s + ") "
+                         + "do not form a canonical coordinate set. "
+                         + "Coordinate values must satisfy the criteria q + r + s == 0.");
         }
         
         this.vec3 = new Vector3Int(q, s, r);
@@ -49,12 +51,12 @@ public class Cube
         return other.q == this.q && other.r == this.r && other.s == this.s;
     }
     
-    public static Cube operator ==(Cube a, Cube b)
+    public static bool operator ==(Cube a, Cube b)
     {
         return a.Equals(b);
     }
 
-    public static Cube operator !=(Cube a, Cube b)
+    public static bool operator !=(Cube a, Cube b)
     {
         return !a.Equals(b);
     }
@@ -78,12 +80,12 @@ public class Axial
 
     public Axial(int q, int r)
     {   
-        this.vec2 = new Vector2Int(q, s);
+        this.vec2 = new Vector2Int(q, r);
     }
 
     public int q { get { return vec2.x; } }
 
-    public int r { get { return vec3.y; } }
+    public int r { get { return vec2.y; } }
 
     public Cube ToCube()
     {
@@ -105,12 +107,12 @@ public class Axial
         return other.q == this.q && other.r == this.r;
     }
     
-    public static Axial operator ==(Axial a, Axial b)
+    public static bool operator ==(Axial a, Axial b)
     {
         return a.Equals(b);
     }
 
-    public static Axial operator !=(Axial a, Axial b)
+    public static bool operator !=(Axial a, Axial b)
     {
         return !a.Equals(b);
     }
