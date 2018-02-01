@@ -3,7 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class HexGrid {
+public class HexGrid
+{
 
     Alignment alignment;
     HashSet<Cube> hexes = new HashSet<Cube>();
@@ -63,24 +64,100 @@ public class HexGrid {
         N, NE, E, SE, S, SW, W, NW
     }
 
-    Dictionary<int, int> hDirections = new Dictionary<int, int> { {1,0}, {2,1}, {3,2}, {5,3}, {6,4}, {7,5} };
-    Dictionary<int, int> vDirections = new Dictionary<int, int> { {0,5}, {1,0}, {3,1}, {4,2}, {5,3}, {7,4} };
+    // Key: Direction as int; Value: index of corresponding Cube vector in cubeDirections
+    Dictionary<int, int> hDirections = new Dictionary<int, int> { { 1, 0 }, { 2, 1 }, { 3, 2 }, { 5, 3 }, { 6, 4 }, { 7, 5 } };
+    Dictionary<int, int> vDirections = new Dictionary<int, int> { { 0, 5 }, { 1, 0 }, { 3, 1 }, { 4, 2 }, { 5, 3 }, { 7, 4 } };
 
-    Cube[] cubeDirections = new Cube[6] { new Cube(+1, 0, -1), new Cube(+1, -1, 0), new Cube(0, -1, +1),
-                                          new Cube(-1, 0, +1), new Cube(-1, +1, 0), new Cube(0, +1, -1)};
+    Cube[] cubeDirections = new Cube[6] { new Cube(+1, -1, 0), new Cube(+1, 0, -1), new Cube(0, +1, -1),
+                                          new Cube(-1, +1, 0), new Cube(-1, 0, +1), new Cube(0, -1, +1)};
 
+    /// <summary>
+    /// Returns a cube coordinate vector corresponding with the provided direction. Errors on invalid directions given alignment.
+    /// </summary>
+    /// <param name="dir"></param>
+    /// <returns></returns>
     public Cube CubeDirection(Direction dir)
     {
-        if (alignment == Alignment.Horizontal && !hDirections.ContainsKey((int) dir) ||
-            alignment == Alignment.Vertical && !vDirections.ContainsKey((int) dir))
+        if (alignment == Alignment.Horizontal && !hDirections.ContainsKey((int)dir) ||
+            alignment == Alignment.Vertical && !vDirections.ContainsKey((int)dir))
         {
             Debug.LogError(dir.ToString() + " is not a valid direction for neighbors in a " + alignment + " hex grid.");
         }
         return cubeDirections[alignment == Alignment.Horizontal ? hDirections[(int)dir] : vDirections[(int)dir]];
     }
-}
 
-// TODO: Add Cube directions, neighbors and diagonals
+    /// <summary>
+    /// Return the cube coordinates of the neighbor toward the given direction from the provided cube coordinates.
+    /// </summary>
+    /// <param name="cube"></param>
+    /// <param name="dir"></param>
+    /// <returns></returns>
+    public Cube GetNeighbor(Cube cube, Direction dir)
+    {
+        return cube + CubeDirection(dir);
+    }
+
+    /// <summary>
+    /// Return all neighboring cube coordinates from provided cube coordinates (in clockwise order).
+    /// </summary>
+    /// <returns></returns>
+    public List<Cube> GetNeighbors(Cube cube)
+    {
+        List<Cube> neighboringCubes = new List<Cube>();
+        foreach (Direction dir in alignment == Alignment.Horizontal ? hDirections.Keys : vDirections.Keys)
+        {
+            neighboringCubes.Add(GetNeighbor(cube, dir));
+        }
+        return neighboringCubes;
+    }
+
+    // Key: Direction as int; Value: index of corresponding Cube vector in cubeDiagonals
+    Dictionary<int, int> hDiagonals = new Dictionary<int, int> { { 0, 0 }, { 1, 1 }, { 3, 2 }, { 4, 3 }, { 5, 4 }, { 7, 5 } };
+    Dictionary<int, int> vDiagonals = new Dictionary<int, int> { { 1, 0 }, { 2, 1 }, { 3, 2 }, { 5, 3 }, { 6, 4 }, { 7, 5 } };
+
+    Cube[] cubeDiagonals = new Cube[6] { new Cube(+1, -2, +1), new Cube(+2, -1, -1), new Cube(+1, +1, -2),
+                                         new Cube(-1, +2, -1), new Cube(-2, +1, +1), new Cube(-1, -1, +2)};
+
+    /// <summary>
+    /// Returns a cube coordinate vector corresponding with the provided diagonal direction. Errors on invalid directions given alignment.
+    /// </summary>
+    /// <param name="dir"></param>
+    /// <returns></returns>
+    public Cube CubeDiagonal(Direction dir)
+    {
+        if (alignment == Alignment.Horizontal && !hDiagonals.ContainsKey((int)dir) ||
+            alignment == Alignment.Vertical && !vDiagonals.ContainsKey((int)dir))
+        {
+            Debug.LogError(dir.ToString() + " is not a valid direction for diagonal neighbors in a " + alignment + " hex grid.");
+        }
+        return cubeDiagonals[alignment == Alignment.Horizontal ? hDiagonals[(int)dir] : vDiagonals[(int)dir]];
+    }
+
+    /// <summary>
+    /// Return the cube coordinates of the neighbor toward the given diagonal direction from the provided cube coordinates.
+    /// </summary>
+    /// <param name="cube"></param>
+    /// <param name="dir"></param>
+    /// <returns></returns>
+    public Cube GetDiagonalNeighbor(Cube cube, Direction dir)
+    {
+        return cube + CubeDiagonal(dir);
+    }
+
+    /// <summary>
+    /// Return all diagonally-neighboring cube coordinates from provided cube coordinates (in clockwise order).
+    /// </summary>
+    /// <returns></returns>
+    public List<Cube> GetDiagonalNeighbors(Cube cube)
+    {
+        List<Cube> neighboringDiagonalCubes = new List<Cube>();
+        foreach (Direction dir in alignment == Alignment.Horizontal ? hDiagonals.Keys : vDiagonals.Keys)
+        {
+            neighboringDiagonalCubes.Add(GetDiagonalNeighbor(cube, dir));
+        }
+        return neighboringDiagonalCubes;
+    }
+}
 
 /// <summary>
 /// Cube coordinate for a hex grid
