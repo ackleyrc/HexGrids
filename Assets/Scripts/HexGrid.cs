@@ -5,10 +5,86 @@ using UnityEngine;
 
 public class HexGrid {
 
+    Alignment alignment;
+    HashSet<Cube> hexes = new HashSet<Cube>();
+
+    public enum Alignment
+    {
+        Horizontal,
+        Vertical
+    }
+
+    /// <summary>
+    /// Describes the alignment of the hex grid. A horizontally aligned hex grid 
+    /// contains rows of horizontally aligned hexes. A vertically aligned hex grid
+    /// contains columns of vertically aligned hexes.
+    /// </summary>
+    /// <returns></returns>
+    public Alignment GetAlignment()
+    {
+        return alignment;
+    }
+
+    /// <summary>
+    /// Determines the alignment of the hex grid. A horizontally aligned hex grid 
+    /// contains rows of horizontally aligned hexes. A vertically aligned hex grid
+    /// contains columns of vertically aligned hexes.
+    /// </summary>
+    /// <returns></returns>
+    public void SetAlignment(Alignment aligned)
+    {
+        alignment = aligned;
+    }
+
+    /// <summary>
+    /// Returns true if the provided Hex is new to the grid. Otherwise, 
+    /// returns false if the grid already contains the provided coordinates.
+    /// </summary>
+    /// <param name="cube"></param>
+    /// <returns></returns>
+    public bool AddHex(Cube cubeCoords)
+    {
+        return hexes.Add(cubeCoords);
+    }
+
+    /// <summary>
+    /// Returns true if the provided Hex is new to the grid. Otherwise, 
+    /// returns false if the grid already contains the provided coordinates.
+    /// </summary>
+    /// <param name="axial"></param>
+    /// <returns></returns>
+    public bool AddHex(Axial axialCoords)
+    {
+        return hexes.Add(axialCoords.ToCube());
+    }
+
+    public enum Direction
+    {
+        N, NE, E, SE, S, SW, W, NW
+    }
+
+    Dictionary<int, int> hDirections = new Dictionary<int, int> { {1,0}, {2,1}, {3,2}, {5,3}, {6,4}, {7,5} };
+    Dictionary<int, int> vDirections = new Dictionary<int, int> { {0,5}, {1,0}, {3,1}, {4,2}, {5,3}, {7,4} };
+
+    Cube[] cubeDirections = new Cube[6] { new Cube(+1, 0, -1), new Cube(+1, -1, 0), new Cube(0, -1, +1),
+                                          new Cube(-1, 0, +1), new Cube(-1, +1, 0), new Cube(0, +1, -1)};
+
+    public Cube CubeDirection(Direction dir)
+    {
+        if (alignment == Alignment.Horizontal && !hDirections.ContainsKey((int) dir) ||
+            alignment == Alignment.Vertical && !vDirections.ContainsKey((int) dir))
+        {
+            Debug.LogError(dir.ToString() + " is not a valid direction for neighbors in a " + alignment + " hex grid.");
+        }
+        return cubeDirections[alignment == Alignment.Horizontal ? hDirections[(int)dir] : vDirections[(int)dir]];
+    }
 }
 
 // TODO: Add Cube directions, neighbors and diagonals
 
+/// <summary>
+/// Cube coordinate for a hex grid
+/// </summary>
 public class Cube
 {
     Vector3Int vec3;
@@ -23,6 +99,11 @@ public class Cube
         }
         
         this.vec3 = new Vector3Int(q, s, r);
+    }
+
+    public Cube(int q, int r)
+    {
+        this.vec3 = new Vector3Int(q, -q - r, r);
     }
 
     public int q { get { return vec3.x; } }
@@ -45,30 +126,64 @@ public class Cube
     {
         return new Cube(a.q - b.q, a.r - b.r, a.s - b.s);
     }
-    
+
+    public override bool Equals(object obj)
+    {
+        if (obj is Cube)
+        {
+            return Equals((Cube)obj);
+        }
+        else
+        {
+            return base.Equals(obj);
+        }
+    }
+
     public bool Equals(Cube other)
     {
-        return other.q == this.q && other.r == this.r && other.s == this.s;
+        if (other == null)
+        {
+            return false;
+        }
+        else if (other.q == this.q && other.r == this.r && other.s == this.s)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
     
     public static bool operator ==(Cube a, Cube b)
     {
-        return a.Equals(b);
+        if (System.Object.ReferenceEquals(a, b))
+        {
+            return true;
+        }
+        else if (UnityEngine.Object.ReferenceEquals(a, b))
+        {
+            return true;
+        }
+        else
+        {
+            return a.Equals(b);
+        }
     }
 
     public static bool operator !=(Cube a, Cube b)
     {
-        return !a.Equals(b);
+        return !(a == b);
     }
     
     public override string ToString()
     {
         return string.Format ("Cube(" + q + ", " + r + ", " + s + ")");
     }
-    
+
     public override int GetHashCode()
     {
-        return new Vector2Int(q, r).GetHashCode();   
+        return new Vector2Int(q, r).GetHashCode();
     }
 }
 
@@ -101,22 +216,56 @@ public class Axial
     {
         return new Axial(a.q - b.q, a.r - b.r);
     }
-    
+
+    public override bool Equals(object obj)
+    {
+        if (obj is Axial)
+        {
+            return Equals((Axial)obj);
+        }
+        else
+        {
+            return base.Equals(obj);
+        }
+    }
+
     public bool Equals(Axial other)
     {
-        return other.q == this.q && other.r == this.r;
+        if (other == null)
+        {
+            return false;
+        }
+        else if (other.q == this.q && other.r == this.r)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
-    
+
     public static bool operator ==(Axial a, Axial b)
     {
-        return a.Equals(b);
+        if (System.Object.ReferenceEquals(a, b))
+        {
+            return true;
+        }
+        else if (UnityEngine.Object.ReferenceEquals(a, b))
+        {
+            return true;
+        }
+        else
+        {
+            return a.Equals(b);
+        }
     }
 
     public static bool operator !=(Axial a, Axial b)
     {
-        return !a.Equals(b);
+        return !(a == b);
     }
-    
+
     public override string ToString()
     {
         return string.Format ("Axial(" + q + ", " + r + ")");
