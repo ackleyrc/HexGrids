@@ -7,6 +7,8 @@ public class HexGrid {
 
 }
 
+// TODO: Add Cube directions, neighbors and diagonals
+
 public class Cube
 {
     Vector3Int vec3;
@@ -27,6 +29,11 @@ public class Cube
 
     public int s { get { return vec3.y; } }
 
+    public Axial ToAxial()
+    {
+        return new Axial(q, r);
+    }
+    
     public static Cube operator +(Cube a, Cube b)
     {
         return new Cube(a.q + b.q, a.r + b.r, a.s + b.s);
@@ -55,6 +62,62 @@ public class Cube
     public override string ToString()
     {
         return string.Format ("Cube(" + q + ", " + r + ", " + s + ")");
+    }
+    
+    public override int GetHashCode()
+    {
+        return new Vector2Int(q, r).GetHashCode();   
+    }
+}
+
+// TODO: Add Axial directions and neighbors (and diagonals?)
+
+public class Axial
+{
+    Vector2Int vec2;
+
+    public Axial(int q, int r)
+    {   
+        this.vec2 = new Vector2Int(q, s);
+    }
+
+    public int q { get { return vec2.x; } }
+
+    public int r { get { return vec3.y; } }
+
+    public Cube ToCube()
+    {
+        return new Cube(q, r, -q-r);
+    }
+    
+    public static Axial operator +(Axial a, Axial b)
+    {
+        return new Axial(a.q + b.q, a.r + b.r);
+    }
+    
+    public static Axial operator -(Axial a, Axial b)
+    {
+        return new Axial(a.q - b.q, a.r - b.r);
+    }
+    
+    public bool Equals(Axial other)
+    {
+        return other.q == this.q && other.r == this.r;
+    }
+    
+    public static Axial operator ==(Axial a, Axial b)
+    {
+        return a.Equals(b);
+    }
+
+    public static Axial operator !=(Axial a, Axial b)
+    {
+        return !a.Equals(b);
+    }
+    
+    public override string ToString()
+    {
+        return string.Format ("Axial(" + q + ", " + r + ")");
     }
     
     public override int GetHashCode()
