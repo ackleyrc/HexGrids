@@ -5,9 +5,27 @@ using UnityEngine;
 
 public class HexGrid
 {
-
     Alignment alignment;
     HashSet<Cube> hexes = new HashSet<Cube>();
+
+    public HashSet<Cube> GenerateRectangularGrid(Alignment alignment, int width, int length)
+    {
+        if (alignment == Alignment.Horizontal)
+        {
+            for (int row = 0; row < length; row++)
+            {
+                for (int col = 0; col < width; col++)
+                {
+                    AddHex(new Cube(col - Mathf.FloorToInt(row / 2f), row));
+                }
+            }
+        }
+        else
+        {
+            Debug.LogError("GenerateRectangularGrid() does not support vertical hex grids at this time.");
+        }
+        return hexes;
+    }
 
     public enum Alignment
     {
@@ -58,6 +76,30 @@ public class HexGrid
     {
         return hexes.Add(axialCoords.ToCube());
     }
+
+    public Vector3 CubeToPixel(Cube cube, float hexSize)
+    {
+        Vector3 pixel = new Vector3();
+        if (alignment == Alignment.Horizontal)
+        {
+            float x = hexSize * Mathf.Sqrt(3f) * (cube.q + cube.r / 2f);
+            float y = hexSize * (3f / 2f) * cube.r;
+            pixel = new Vector3(x, y, 0f);
+        }
+        else if (alignment == Alignment.Vertical)
+        {
+            float x = hexSize * (3f / 2f) * cube.q;
+            float y = hexSize * Mathf.Sqrt(3f) * (cube.r + cube.q / 2f);
+            pixel = new Vector3(x, y, 0f);
+        }
+        else
+        {
+            Debug.LogError("Hex Grid alignment not set.");
+        }
+        return pixel;
+    }
+
+    // TODO: PixelToCube >> depends on Cube.Round()
 
     public enum Direction
     {
@@ -192,6 +234,50 @@ public class Cube
     public Axial ToAxial()
     {
         return new Axial(q, r);
+    }
+
+    public Vector3 ToVector3()
+    {
+        return vec3;
+    }
+
+    public static Cube Round(float q, float r)
+    {
+        float s = -q - r;
+        return Round(q, r, s);
+    }
+
+    public static Cube Round(float q, float r, float s)
+    {
+        if (q + r + s != 0)
+        {
+            Debug.LogError("The provided coordinates (" + q + ", " + r + ", " + s + ") "
+                         + "do not form a canonical coordinate set. "
+                         + "Coordinate values must satisfy the criteria q + r + s == 0.");
+        }
+
+        int rq = Mathf.RoundToInt(q);
+        int rr = Mathf.RoundToInt(r);
+        int rs = Mathf.RoundToInt(s);
+
+        float dq = Mathf.Abs(rq - q);
+        float dr = Mathf.Abs(rr - r);
+        float ds = Mathf.Abs(rs - s);
+
+        if (dq > dr && dq > ds)
+        {
+            rq = -rr - rs;
+        }
+        else if (dr > ds)
+        {
+            rr = -rq - rs;
+        }
+        else
+        {
+            rs = -rq - rr;
+        }
+
+        return new Cube(rq, rr, rs);
     }
     
     public static Cube operator +(Cube a, Cube b)
