@@ -77,6 +77,11 @@ public class HexGrid
         return hexes.Add(axialCoords.ToCube());
     }
 
+    public HashSet<Cube> GetHexes()
+    {
+        return hexes;
+    }
+
     public Vector3 CubeToPixel(Cube cube, float hexSize)
     {
         Vector3 pixel = new Vector3();
@@ -99,7 +104,27 @@ public class HexGrid
         return pixel;
     }
 
-    // TODO: PixelToCube >> depends on Cube.Round()
+    public Cube PixelToCube(float x, float y, float hexSize)
+    {
+        Cube cube = new Cube(0, 0, 0);
+        if (alignment == Alignment.Horizontal)
+        {
+            float q = (x * (Mathf.Sqrt(3f) / 3f)- (y / 3f)) / hexSize;
+            float r = (y * (2f / 3f) / hexSize);
+            return Cube.Round(q, r);
+        }
+        else if (alignment == Alignment.Vertical)
+        {
+            float q = (x * (2f / 3f) / hexSize);
+            float r = ((-x / 3f) + (Mathf.Sqrt(3f) / 3f) * y) / hexSize;
+            return Cube.Round(q, r);
+        }
+        else
+        {
+            Debug.LogError("Hex Grid alignment not set.");
+        }
+        return cube;
+    } 
 
     public enum Direction
     {
@@ -249,13 +274,6 @@ public class Cube
 
     public static Cube Round(float q, float r, float s)
     {
-        if (q + r + s != 0)
-        {
-            Debug.LogError("The provided coordinates (" + q + ", " + r + ", " + s + ") "
-                         + "do not form a canonical coordinate set. "
-                         + "Coordinate values must satisfy the criteria q + r + s == 0.");
-        }
-
         int rq = Mathf.RoundToInt(q);
         int rr = Mathf.RoundToInt(r);
         int rs = Mathf.RoundToInt(s);
