@@ -15,12 +15,17 @@ public class HexCoordDisplay : MonoBehaviour {
     public void DisplayCube()
     {
         text.text = cube.q + ", " + cube.r + ", " + cube.s;
-        text.fontSize -= 40;
+        text.fontSize = 220;
     }
 
     public void DisplayAxial()
     {
         text.text = cube.q + ", " + cube.r;
-        text.fontSize += 40;
+        text.fontSize = 260;
+    }
+
+    public void DisplayNone()
+    {
+        text.text = "";
     }
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ScreenToHexTest : MonoBehaviour {
+public class DemoManager : MonoBehaviour {
 
     public GameObject hexPrefab;
     public GameObject highlightPrefab;
@@ -21,7 +21,7 @@ public class ScreenToHexTest : MonoBehaviour {
 
     Cube previousCube = new Cube(0, 0 ,0);
 
-    bool displayingCube = true;
+    CoordDisplay currentCoordDisplay = CoordDisplay.Cube;
 
 	void Start ()
     {
@@ -64,14 +64,6 @@ public class ScreenToHexTest : MonoBehaviour {
         grid = new HexGrid();
         grid.GenerateRectangularGrid(HexGrid.Alignment.Horizontal, width, height);
 
-        // float xOffset = width % 2 == 0 ? -0.35f : 0.35f;
-        // float yOffset = height % 2 == 0 ? -0.35f : 0.35f;
-        int rCenter = Mathf.FloorToInt((height) / 2f);
-        int qCenter = Mathf.FloorToInt((width) / 2f) - Mathf.FloorToInt(rCenter / 2f);
-        Vector3 worldPoint = grid.CubeToPixel(new Cube(qCenter, rCenter), 1f);
-        Camera.main.transform.position = new Vector3(worldPoint.x, worldPoint.y, -10f);
-        Camera.main.orthographicSize = Mathf.Max(width, height);
-
         widthText.text = "Width: " + width;
         heightText.text = "Height: " + height;
 
@@ -81,40 +73,78 @@ public class ScreenToHexTest : MonoBehaviour {
 
             HexCoordDisplay hexCoordDisplay = go.GetComponent<HexCoordDisplay>();
             hexCoordDisplay.SetCube(hex);
-            if (displayingCube)
+            if (currentCoordDisplay == CoordDisplay.Cube)
             {
                 hexCoordDisplay.DisplayCube();
             }
-            else
+            else if (currentCoordDisplay == CoordDisplay.Axial)
             {
                 hexCoordDisplay.DisplayAxial();
+            }
+            else
+            {
+                hexCoordDisplay.DisplayNone();
             }
 
             hexes.Add(hex, go);
         }
+
+        ResetCamera();
+    }
+
+    public void ResetCamera()
+    {
+        int rTopRight = height - 1;
+        int qTopRight = (width - 1) - Mathf.CeilToInt(rTopRight / 2f);
+
+        Cube bottomLeft = new Cube(0, 0);
+        Cube topRight = new Cube(qTopRight, rTopRight);
+
+        Vector3 center = Vector3.Lerp(grid.CubeToPixel(bottomLeft, 1f), grid.CubeToPixel(topRight, 1f), 0.5f);
+        Camera.main.transform.position = new Vector3(center.x, center.y, -10f);
+        Camera.main.orthographicSize = Mathf.Max(width, height);
+    }
+
+    public enum CoordDisplay
+    {
+        Cube,
+        Axial,
+        None
     }
 
     public void DisplayCube()
     {
-        if (!displayingCube)
+        if (currentCoordDisplay != CoordDisplay.Cube)
         {
             foreach (GameObject go in hexes.Values)
             {
                 go.GetComponent<HexCoordDisplay>().DisplayCube();
             }
-            displayingCube = true;
+            currentCoordDisplay = CoordDisplay.Cube;
         }
     }
 
     public void DisplayAxial()
     {
-        if (displayingCube)
+        if (currentCoordDisplay != CoordDisplay.Axial)
         {
             foreach (GameObject go in hexes.Values)
             {
                 go.GetComponent<HexCoordDisplay>().DisplayAxial();
             }
-            displayingCube = false;
+            currentCoordDisplay = CoordDisplay.Axial;
+        }
+    }
+
+    public void DisplayNone()
+    {
+        if (currentCoordDisplay != CoordDisplay.None)
+        {
+            foreach (GameObject go in hexes.Values)
+            {
+                go.GetComponent<HexCoordDisplay>().DisplayNone();
+            }
+            currentCoordDisplay = CoordDisplay.None;
         }
     }
 
