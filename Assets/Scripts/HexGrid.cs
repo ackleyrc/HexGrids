@@ -124,7 +124,9 @@ public class HexGrid
             Debug.LogError("Hex Grid alignment not set.");
         }
         return cube;
-    } 
+    }
+
+
 
     public enum Direction
     {
@@ -298,6 +300,11 @@ public class Cube
         return new Cube(rq, rr, rs);
     }
     
+    public static int Distance(Cube a, Cube b)
+    {
+        return Mathf.Max(Mathf.Abs(a.q - b.q), Mathf.Abs(a.r - b.r), Mathf.Abs(a.s - b.s));
+    }
+
     public static Cube operator +(Cube a, Cube b)
     {
         return new Cube(a.q + b.q, a.r + b.r, a.s + b.s);

@@ -53,7 +53,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4037335858779306}
   m_Layer: 0
-  m_Name: HexHorixHighlight
+  m_Name: HexHorizHighlight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
