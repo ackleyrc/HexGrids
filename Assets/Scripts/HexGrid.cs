@@ -300,6 +300,35 @@ public class Cube
         return new Cube(rq, rr, rs);
     }
     
+    public static List<Cube> LineDraw(Cube a, Cube b)
+    {
+        int N = Distance(a, b);
+        List<Cube> results = new List<Cube>();
+        for (int i = 0; i <= N; i++)
+        {
+            float t = (1f / N) * i;
+            float q = Mathf.Lerp(a.q, b.q, t);
+            float r = Mathf.Lerp(a.r, b.r, t);
+            float s = Mathf.Lerp(a.s, b.s, t);
+            results.Add(Round(q, r, s));
+        }
+        return results;
+    }
+
+    public static List<Cube> Range(Cube center, int range)
+    {
+        List<Cube> results = new List<Cube>();
+        for (int dq = -range; dq <= range; dq++)
+        {
+            for (int dr = Mathf.Max(-range,-dq-range); dr <= Mathf.Min(range, -dq + range); dr++)
+            {
+                int ds = -dq - dr;
+                results.Add(center + new Cube(dq, dr, ds));
+            }
+        }
+        return results;
+    }
+
     public static int Distance(Cube a, Cube b)
     {
         return Mathf.Max(Mathf.Abs(a.q - b.q), Mathf.Abs(a.r - b.r), Mathf.Abs(a.s - b.s));
