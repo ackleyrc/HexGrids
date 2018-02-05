@@ -23,6 +23,13 @@ public class DemoManager : MonoBehaviour
     Cube previousCube = new Cube(0, 0 ,0);
 
     CoordDisplay currentCoordDisplay = CoordDisplay.Cube;
+    DrawMode currentDrawMode = DrawMode.Line;
+
+    public enum DrawMode
+    {
+        Line,
+        Range
+    }
 
 	void Start ()
     {
@@ -44,27 +51,38 @@ public class DemoManager : MonoBehaviour
         {
             firstCube = cubeUnderMouse;
         }
-        // Otherwise, if left mouse button is being held down (dragging state) over grid...
+        // Otherwise, if left mouse button is being held down (dragging state)...
         else if (Input.GetMouseButton(0))
         {
             // ... and the mouse is under a new hex location...
-            if (cubeUnderMouse != firstCube && cubeUnderMouse != previousCube)
+            if (cubeUnderMouse != previousCube)
             {
-                // Get the hex locations that form a line between where the mouse was first clicked and where it is now
-                List<Cube> cubesInLine = Cube.LineDraw(firstCube, cubeUnderMouse);
-                // Relocate or create highlights under each hex in the line
-                for (int i = 0; i < cubesInLine.Count; i++)
+                List<Cube> cubesToHighlight = new List<Cube>();
+                if (currentDrawMode == DrawMode.Line)
+                {
+                    // Get the hex locations that form a line between where the mouse was first clicked and where it is now
+                    cubesToHighlight = Cube.LineDraw(firstCube, cubeUnderMouse);
+                }
+                else if (currentDrawMode == DrawMode.Range)
+                {
+                    // Get the hex locations within the distance from the first hex clicked and where the mouse is now
+                    cubesToHighlight = Cube.Range(firstCube, Cube.Distance(firstCube, cubeUnderMouse));
+                }
+
+                // Relocate or create highlights under each hex to highlight
+                for (int i = 0; i < cubesToHighlight.Count; i++)
                 {
                     if (i >= highlights.Count)
                     {
                         GameObject highlight = GameObject.Instantiate(highlightPrefab, new Vector3(0, 0, 0), Quaternion.identity);
                         highlights.Add(highlight);
                     }
-                    highlights[i].transform.position = grid.CubeToPixel(cubesInLine[i], 1f) + Vector3.forward;
-                    highlights[i].SetActive(grid.GetHexes().Contains(cubeUnderMouse));
+                    // Debug.Log("cubesToHighlight[" + i + "]: " + cubesToHighlight[i]);
+                    highlights[i].transform.position = grid.CubeToPixel(cubesToHighlight[i], 1f) + Vector3.forward;
+                    highlights[i].SetActive(grid.GetHexes().Contains(cubesToHighlight[i]));
                 }
                 // Deactivate any additional highlights beyond the number needed to highlight the line
-                for (int j = cubesInLine.Count; j < highlights.Count; j++)
+                for (int j = cubesToHighlight.Count; j < highlights.Count; j++)
                 {
                     highlights[j].SetActive(false);
                 }
@@ -139,6 +157,22 @@ public class DemoManager : MonoBehaviour
         Vector3 center = Vector3.Lerp(grid.CubeToPixel(bottomLeft, 1f), grid.CubeToPixel(topRight, 1f), 0.5f);
         Camera.main.transform.position = new Vector3(center.x, center.y, -10f);
         Camera.main.orthographicSize = Mathf.Max(width, height);
+    }
+
+    public void SetDrawModeLine()
+    {
+        if (currentDrawMode != DrawMode.Line)
+        {
+            currentDrawMode = DrawMode.Line;
+        }
+    }
+
+    public void SetDrawModeRange()
+    {
+        if (currentDrawMode != DrawMode.Range)
+        {
+            currentDrawMode = DrawMode.Range;
+        }
     }
 
     public enum CoordDisplay

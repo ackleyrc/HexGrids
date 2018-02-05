@@ -302,6 +302,10 @@ public class Cube
     
     public static List<Cube> LineDraw(Cube a, Cube b)
     {
+        if (a == b)
+        {
+            return new List<Cube> { a };
+        }
         int N = Distance(a, b);
         List<Cube> results = new List<Cube>();
         for (int i = 0; i <= N; i++)
