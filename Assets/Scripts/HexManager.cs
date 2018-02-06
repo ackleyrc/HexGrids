@@ -81,7 +81,7 @@ public class HexManager : MonoBehaviour {
         Cube topRight = new Cube(qTopRight, rTopRight);
 
         Vector3 center = Vector3.Lerp(grid.CubeToPixel(bottomLeft, 1f), grid.CubeToPixel(topRight, 1f), 0.5f);
-        Camera.main.transform.position = new Vector3(center.x, center.y, -10f);
+        Camera.main.transform.position = new Vector3(center.x, center.y, -10f) + 0.5f * Vector3.up;
         Camera.main.orthographicSize = Mathf.Max(width, height);
     }
 
