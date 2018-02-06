@@ -109,7 +109,7 @@ public class HexGrid
         Cube cube = new Cube(0, 0, 0);
         if (alignment == Alignment.Horizontal)
         {
-            float q = (x * (Mathf.Sqrt(3f) / 3f)- (y / 3f)) / hexSize;
+            float q = (x * (Mathf.Sqrt(3f) / 3f) - (y / 3f)) / hexSize;
             float r = (y * (2f / 3f) / hexSize);
             return Cube.Round(q, r);
         }
@@ -126,7 +126,38 @@ public class HexGrid
         return cube;
     }
 
+    public delegate bool CubeFilterCriteria(Cube cube);
 
+    /// <summary>
+    /// Returns a list of list of cube coordinates, where each sub-list contains the coordinates 
+    /// reachable at that index distance from the provided start coordinate.
+    /// </summary>
+    /// <param name="start"></param>
+    /// <param name="range"></param>
+    /// <param name="criteria"></param>
+    /// <returns></returns>
+    public List<List<Cube>> Reachable(Cube start, int range, CubeFilterCriteria criteria)
+    {
+        HashSet<Cube> visited = new HashSet<Cube> { start };
+        List<List<Cube>> reachable = new List<List<Cube>> { new List<Cube> { start } };
+        for (int i = 1; i <= range; i++)
+        {
+            reachable.Add(new List<Cube>());
+            foreach (Cube cube in reachable[i-1])
+            {
+                List<Cube> neighbors = GetNeighbors(cube);
+                foreach (Cube neighbor in neighbors)
+                {
+                    if (!visited.Contains(neighbor) && criteria(neighbor))
+                    {
+                        visited.Add(neighbor);
+                        reachable[i].Add(neighbor);
+                    }
+                }
+            }
+        }
+        return reachable;
+    }
 
     public enum Direction
     {

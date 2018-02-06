@@ -13,9 +13,13 @@ public class HexManager : MonoBehaviour {
 
     public GameObject hexPrefab;
     public GameObject highlightPrefab;
+    public GameObject obstaclePrefab;
 
     [HideInInspector]
     public List<GameObject> highlights = new List<GameObject>();
+
+    [HideInInspector]
+    public Dictionary<Cube, GameObject> obstacles = new Dictionary<Cube, GameObject>();
 
     public HexGrid grid = new HexGrid();
     public Dictionary<Cube, GameObject> hexes = new Dictionary<Cube, GameObject>();
@@ -84,6 +88,8 @@ public class HexManager : MonoBehaviour {
         Camera.main.transform.position = new Vector3(center.x, center.y, -10f) + 0.5f * Vector3.up;
         Camera.main.orthographicSize = Mathf.Max(width, height);
     }
+
+    // TODO: Remove or deactivate obstacles outside grid after resizing
 
     public void UpdateWidth(int val)
     {

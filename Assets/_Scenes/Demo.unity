@@ -126,6 +126,7 @@ GameObject:
   - component: {fileID: 33873943}
   - component: {fileID: 33873942}
   - component: {fileID: 33873941}
+  - component: {fileID: 33873945}
   m_Layer: 0
   m_Name: DemoManager
   m_TagString: Untagged
@@ -147,6 +148,7 @@ MonoBehaviour:
   stateMachine: {fileID: 0}
   drawModeLine: {fileID: 33873942}
   drawModeRange: {fileID: 33873941}
+  drawModeObstacle: {fileID: 33873945}
   currentCoordDisplay: 0
 --- !u!4 &33873940
 Transform:
@@ -213,7 +215,20 @@ MonoBehaviour:
   hexPrefab: {fileID: 1492542331692526, guid: b0bb34db8d25bdd4894f7f71d93d9fea, type: 2}
   highlightPrefab: {fileID: 1883380733149530, guid: 9a565385e9f44bb4c8d5d7ce5d867d69,
     type: 2}
+  obstaclePrefab: {fileID: 1810631348733256, guid: 143ec192e310f924e805050e236c4ddc,
+    type: 2}
   highlights: []
+--- !u!114 &33873945
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 33873938}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c33d8a46fb3ed7a47baf2db3ff5e83e9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &64396264
 GameObject:
   m_ObjectHideFlags: 0
@@ -334,6 +349,8 @@ MonoBehaviour:
     - m_Text: Line
       m_Image: {fileID: 0}
     - m_Text: Range
+      m_Image: {fileID: 0}
+    - m_Text: Obstacle
       m_Image: {fileID: 0}
   m_OnValueChanged:
     m_PersistentCalls:

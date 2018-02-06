@@ -47,7 +47,6 @@ public class DrawModeLine : State
                         GameObject highlight = GameObject.Instantiate(hexManager.highlightPrefab, new Vector3(0, 0, 0), Quaternion.identity);
                         hexManager.highlights.Add(highlight);
                     }
-                    // Debug.Log("cubesToHighlight[" + i + "]: " + cubesToHighlight[i]);
                     hexManager.highlights[i].transform.position = hexManager.grid.CubeToPixel(cubesToHighlight[i], 1f) + Vector3.forward;
                     hexManager.highlights[i].SetActive(hexManager.grid.GetHexes().Contains(cubesToHighlight[i]));
                 }
