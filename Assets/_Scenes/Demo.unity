@@ -122,6 +122,9 @@ GameObject:
   m_Component:
   - component: {fileID: 33873940}
   - component: {fileID: 33873939}
+  - component: {fileID: 33873943}
+  - component: {fileID: 33873942}
+  - component: {fileID: 33873941}
   m_Layer: 0
   m_Name: DemoManager
   m_TagString: Untagged
@@ -147,6 +150,10 @@ MonoBehaviour:
   hexPrefab: {fileID: 1492542331692526, guid: b0bb34db8d25bdd4894f7f71d93d9fea, type: 2}
   highlightPrefab: {fileID: 1883380733149530, guid: 9a565385e9f44bb4c8d5d7ce5d867d69,
     type: 2}
+  stateMachine: {fileID: 0}
+  drawModeLine: {fileID: 33873942}
+  drawModeRange: {fileID: 33873941}
+  highlights: []
 --- !u!4 &33873940
 Transform:
   m_ObjectHideFlags: 0
@@ -160,6 +167,40 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &33873941
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 33873938}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 093c341ea9196b84d8edba6f5963d1ee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &33873942
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 33873938}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a97e0091e3287842bcc05993d605eb4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &33873943
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 33873938}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e5039f815e897b49b96319803bab56f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentState: {fileID: 33873942}
 --- !u!1 &83526631
 GameObject:
   m_ObjectHideFlags: 0
@@ -2250,8 +2291,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 33873939}
-        m_MethodName: SetDrawModeLine
-        m_Mode: 1
+        m_MethodName: SetDrawMode
+        m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -3034,12 +3075,12 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 33873939}
-        m_MethodName: SetDrawModeRange
-        m_Mode: 1
+        m_MethodName: SetDrawMode
+        m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
+          m_IntArgument: 1
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
