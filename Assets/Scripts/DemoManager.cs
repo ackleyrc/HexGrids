@@ -7,6 +7,7 @@ using UnityEngine.UI;
 [RequireComponent(typeof(DrawModeLine))]
 [RequireComponent(typeof(DrawModeRange))]
 [RequireComponent(typeof(DrawModeObstacle))]
+[RequireComponent(typeof(DrawModeReachable))]
 public class DemoManager : MonoBehaviour
 {
     [HideInInspector]
@@ -17,6 +18,7 @@ public class DemoManager : MonoBehaviour
     public DrawModeLine drawModeLine;
     public DrawModeRange drawModeRange;
     public DrawModeObstacle drawModeObstacle;
+    public DrawModeReachable drawModeReachable;
 
     HexManager hexManager;
 
@@ -38,7 +40,8 @@ public class DemoManager : MonoBehaviour
         {
             drawModeLine,
             drawModeRange,
-            drawModeObstacle
+            drawModeObstacle,
+            drawModeReachable
         };
         hexManager = GetComponent<HexManager>();
     }
