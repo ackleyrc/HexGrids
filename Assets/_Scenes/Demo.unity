@@ -217,6 +217,8 @@ MonoBehaviour:
     type: 2}
   obstaclePrefab: {fileID: 1810631348733256, guid: 143ec192e310f924e805050e236c4ddc,
     type: 2}
+  warningPrefab: {fileID: 1825088418460990, guid: 5a0dabc95577d0e44a4b41164b3fafb2,
+    type: 2}
   highlights: []
 --- !u!114 &33873945
 MonoBehaviour:

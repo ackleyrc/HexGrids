@@ -14,6 +14,7 @@ public class HexManager : MonoBehaviour {
     public GameObject hexPrefab;
     public GameObject highlightPrefab;
     public GameObject obstaclePrefab;
+    public GameObject warningPrefab;
 
     [HideInInspector]
     public List<GameObject> highlights = new List<GameObject>();
