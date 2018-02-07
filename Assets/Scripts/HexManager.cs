@@ -34,10 +34,17 @@ public class HexManager : MonoBehaviour {
 
     void Start ()
     {
+        SetWidth(width);
+        SetHeight(height);
         SetGrid();
         GameObject highlight = GameObject.Instantiate(highlightPrefab, new Vector3(0, 0, 0), Quaternion.identity);
         highlight.SetActive(false);
         highlights.Add(highlight);
+    }
+
+    public void DeactivateHighlights()
+    {
+        ReplaceHighlights(new List<Cube>());
     }
 
     public void ReplaceHighlights(Cube location)
@@ -65,6 +72,23 @@ public class HexManager : MonoBehaviour {
             {
                 highlights[j].SetActive(false);
             }
+        }
+    }
+
+    private void RemoveOffGridObstacles()
+    {
+        Dictionary<Cube, GameObject> obstaclesToRemove = new Dictionary<Cube, GameObject>();
+        foreach (KeyValuePair<Cube, GameObject> pair in obstacles)
+        {
+            if (!grid.GetHexes().Contains(pair.Key))
+            {
+                obstaclesToRemove.Add(pair.Key, pair.Value);
+            }
+        }
+        foreach (KeyValuePair<Cube, GameObject> pair in obstaclesToRemove)
+        {
+            obstacles.Remove(pair.Key);
+            Destroy(pair.Value);
         }
     }
 
@@ -118,20 +142,30 @@ public class HexManager : MonoBehaviour {
         Camera.main.orthographicSize = Mathf.Max(width, height);
     }
 
-    // TODO: Remove or deactivate obstacles outside grid after resizing
+    private void SetWidth(int val)
+    {
+        width = (int)Mathf.Clamp(val, 1, Mathf.Infinity);
+        widthText.text = "Width: " + width;
+    }
+
+    private void SetHeight(int val)
+    {
+        height = (int)Mathf.Clamp(val, 1, Mathf.Infinity);
+        heightText.text = "Height: " + height;
+    }
 
     public void UpdateWidth(int val)
     {
-        width = (int)Mathf.Clamp(width + val, 1, Mathf.Infinity);
-        widthText.text = "Width: " + width;
+        SetWidth(width + val);
         SetGrid();
+        RemoveOffGridObstacles();
     }
 
     public void UpdateHeight(int val)
     {
-        height = (int)Mathf.Clamp(height + val, 1, Mathf.Infinity);
-        heightText.text = "Height: " + height;
+        SetHeight(height + val);
         SetGrid();
+        RemoveOffGridObstacles();
     }
 
     public void DisplayCube()

@@ -20,7 +20,6 @@ public class DrawModeObstacle : State
 
     public override void DoUpdate()
     {
-        // TODO: Remove obstacles when right-clicking (or toggle existing obstacles under the current line)
         // TODO: Only draw obstacles when first click starts within the grid
 
         // Determine which hex the mouse is currently hovering over
@@ -31,21 +30,19 @@ public class DrawModeObstacle : State
         if (Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1))
         {
             firstCube = cubeUnderMouse;
-            hexManager.highlights[0].SetActive(false);
+            hexManager.DeactivateHighlights();
             tentativeLocations = new List<GameObject>();
         }
         // Otherwise, if left mouse button is being held down (dragging state)...
         else if (Input.GetMouseButton(0) || Input.GetMouseButton(1))
         { 
             GameObject hexPrefab = Input.GetMouseButton(0) ? hexManager.obstaclePrefab : hexManager.warningPrefab;
-            float zOffset = Input.GetMouseButton(0) ? 0f : 0.25f;
 
             // ... and the mouse is under a new hex location...
             if (cubeUnderMouse == firstCube || cubeUnderMouse != previousCube)
             {
-                List<Cube> newLocations = new List<Cube>();
                 // Get the hex locations that form a line between where the mouse was first clicked and where it is now
-                newLocations = Cube.Line(firstCube, cubeUnderMouse);
+                List<Cube> newLocations = Cube.Line(firstCube, cubeUnderMouse);
 
                 // Relocate or create prospective obstacles under each hex location
                 for (int i = 0; i < newLocations.Count; i++)
@@ -55,7 +52,7 @@ public class DrawModeObstacle : State
                         GameObject hex = GameObject.Instantiate(hexPrefab, new Vector3(0, 0, 0), Quaternion.identity);
                         tentativeLocations.Add(hex);
                     }
-                    tentativeLocations[i].transform.position = hexManager.grid.CubeToPixel(newLocations[i], 1f) + Vector3.forward - Vector3.forward * zOffset;
+                    tentativeLocations[i].transform.position = hexManager.grid.CubeToPixel(newLocations[i], 1f) + Vector3.forward;
                     tentativeLocations[i].SetActive(hexManager.grid.GetHexes().Contains(newLocations[i]));
                 }
                 // Deactivate any additional prospective obstalces beyond the number needed to highlight the line
