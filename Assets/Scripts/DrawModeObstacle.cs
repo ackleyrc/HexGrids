@@ -45,7 +45,7 @@ public class DrawModeObstacle : State
             {
                 List<Cube> newLocations = new List<Cube>();
                 // Get the hex locations that form a line between where the mouse was first clicked and where it is now
-                newLocations = Cube.LineDraw(firstCube, cubeUnderMouse);
+                newLocations = Cube.Line(firstCube, cubeUnderMouse);
 
                 // Relocate or create prospective obstacles under each hex location
                 for (int i = 0; i < newLocations.Count; i++)

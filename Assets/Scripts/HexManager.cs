@@ -40,6 +40,29 @@ public class HexManager : MonoBehaviour {
         highlights.Add(highlight);
     }
 
+    public void ReplaceHighlights(List<Cube> newLocations)
+    {
+        if (newLocations != null)
+        {
+            // Relocate or create highlights under each hex to highlight
+            for (int i = 0; i < newLocations.Count; i++)
+            {
+                if (i >= highlights.Count)
+                {
+                    GameObject highlight = GameObject.Instantiate(highlightPrefab, new Vector3(0, 0, 0), Quaternion.identity);
+                    highlights.Add(highlight);
+                }
+                highlights[i].transform.position = grid.CubeToPixel(newLocations[i], 1f) + Vector3.forward;
+                highlights[i].SetActive(grid.GetHexes().Contains(newLocations[i]));
+            }
+            // Deactivate any additional highlights beyond the number those needed
+            for (int j = newLocations.Count; j < highlights.Count; j++)
+            {
+                highlights[j].SetActive(false);
+            }
+        }
+    }
+
     public void SetGrid()
     {
         foreach (GameObject go in hexes.Values)

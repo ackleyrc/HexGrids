@@ -331,7 +331,7 @@ public class Cube
         return new Cube(rq, rr, rs);
     }
     
-    public static List<Cube> LineDraw(Cube a, Cube b)
+    public static List<Cube> Line(Cube a, Cube b)
     {
         if (a == b)
         {
