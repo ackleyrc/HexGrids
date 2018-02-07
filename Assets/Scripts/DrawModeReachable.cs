@@ -37,9 +37,10 @@ public class DrawModeReachable : State
             if (cubeUnderMouse != previousCube)
             {
                 // Get the hex locations within the distance from the first hex clicked and where the mouse is now
-                List<List<Cube>> cubesReachable = hexManager.grid.Reachable(firstCube, 
-                                                                        Cube.Distance(firstCube, cubeUnderMouse), 
-                                                                        (x) => !hexManager.obstacles.ContainsKey(x));
+                List<List<Cube>> cubesReachable = hexManager.grid.Reachable(firstCube,
+                                                                        Cube.Distance(firstCube, cubeUnderMouse),
+                                                                        (x) => !hexManager.obstacles.ContainsKey(x) 
+                                                                               && hexManager.grid.GetHexes().Contains(x));
                 List<Cube> cubesToHighlight = cubesReachable.SelectMany(i => i).ToList();
                 // Replace the existing highlights to cover the determined range
                 hexManager.ReplaceHighlights(cubesToHighlight);
