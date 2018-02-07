@@ -40,6 +40,11 @@ public class HexManager : MonoBehaviour {
         highlights.Add(highlight);
     }
 
+    public void ReplaceHighlights(Cube location)
+    {
+        ReplaceHighlights(new List<Cube> { location });
+    }
+
     public void ReplaceHighlights(List<Cube> newLocations)
     {
         if (newLocations != null)

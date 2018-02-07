@@ -39,14 +39,14 @@ public class DrawModeLine : State
                 List<Cube> cubesToHighlight = Cube.Line(firstCube, cubeUnderMouse);
 
                 // Replace the existing highlights to cover the determined line
-                hexManager.ReplaceHighlights(cubesToHighlight);
+                hexManager.ReplaceHighlights( cubesToHighlight );
             }
         }
         // Otherwise, if left mouse button has been released or is not held and a new hex has been moused over...
         else if (Input.GetMouseButtonUp(0) || cubeUnderMouse != previousCube)
         {
             // Highlight just the hex currently under the mouse
-            hexManager.ReplaceHighlights(new List<Cube> { cubeUnderMouse });
+            hexManager.ReplaceHighlights( cubeUnderMouse );
         }
 
         // Make note of the hex currently under the mouse this frame for comparison next frame
