@@ -19,6 +19,8 @@ public class HexManager : MonoBehaviour {
     [HideInInspector]
     public List<GameObject> highlights = new List<GameObject>();
 
+    List<GameObject> tentativeObstacleAdditions = new List<GameObject>();
+    List<GameObject> tentativeObstacleRemovals = new List<GameObject>();
     [HideInInspector]
     public Dictionary<Cube, GameObject> obstacles = new Dictionary<Cube, GameObject>();
 
@@ -54,23 +56,80 @@ public class HexManager : MonoBehaviour {
 
     public void ReplaceHighlights(List<Cube> newLocations)
     {
+        ReplaceHexTiles(newLocations, highlights, highlightPrefab);
+    }
+
+    public void PreviewObstacleAdditions(List<Cube> newLocations)
+    {
+        ReplaceHexTiles(newLocations, tentativeObstacleAdditions, obstaclePrefab);
+    }
+
+    public void ConfirmObstacleAdditions()
+    {
+        // Lock in any active prospective obstacles and destroy the rest
+        foreach (GameObject obstacleAdd in tentativeObstacleAdditions)
+        {
+            Vector3 position = obstacleAdd.transform.position;
+            Cube cubePosition = grid.PixelToCube(position.x, position.y, 1f);
+            if (obstacleAdd.activeSelf && !obstacles.ContainsKey(cubePosition))
+            {
+                obstacles.Add(cubePosition, obstacleAdd);
+            }
+            else
+            {
+                Destroy(obstacleAdd);
+            }
+        }
+        // Reset tentative list for next time
+        tentativeObstacleAdditions = new List<GameObject>();
+    }
+
+    public void PreviewObstacleRemovals(List<Cube> newLocations)
+    {
+        ReplaceHexTiles(newLocations, tentativeObstacleRemovals, warningPrefab);
+    }
+
+    public void ConfirmObstacleRemovals()
+    {
+        // Destroy any obstacles under the hex tiles marking removal
+        foreach (GameObject obstacleRemove in tentativeObstacleRemovals)
+        {
+            Vector3 position = obstacleRemove.transform.position;
+            Cube cubePosition = grid.PixelToCube(position.x, position.y, 1f);
+            if (obstacleRemove.activeSelf)
+            {
+                if (obstacles.ContainsKey(cubePosition))
+                {
+                    GameObject go = obstacles[cubePosition];
+                    obstacles.Remove(cubePosition);
+                    Destroy(go);
+                }
+            }
+            Destroy(obstacleRemove);
+        }
+        // Reset tentative list for next time
+        tentativeObstacleRemovals = new List<GameObject>();
+    }
+
+    private void ReplaceHexTiles(List<Cube> newLocations, List<GameObject> hexTileContainer, GameObject hexTilePrefab)
+    {
         if (newLocations != null)
         {
-            // Relocate or create highlights under each hex to highlight
+            // Relocate or create hex tiles under each provided hex location
             for (int i = 0; i < newLocations.Count; i++)
             {
-                if (i >= highlights.Count)
+                if (i >= hexTileContainer.Count)
                 {
-                    GameObject highlight = GameObject.Instantiate(highlightPrefab, new Vector3(0, 0, 0), Quaternion.identity);
-                    highlights.Add(highlight);
+                    GameObject hexTile = GameObject.Instantiate(hexTilePrefab, new Vector3(0, 0, 0), Quaternion.identity);
+                    hexTileContainer.Add(hexTile);
                 }
-                highlights[i].transform.position = grid.CubeToPixel(newLocations[i], 1f) + Vector3.forward;
-                highlights[i].SetActive(grid.GetHexes().Contains(newLocations[i]));
+                hexTileContainer[i].transform.position = grid.CubeToPixel(newLocations[i], 1f) + Vector3.forward;
+                hexTileContainer[i].SetActive(grid.GetHexes().Contains(newLocations[i]));
             }
-            // Deactivate any additional highlights beyond the number those needed
-            for (int j = newLocations.Count; j < highlights.Count; j++)
+            // Deactivate any remaining existing hex tiles beyond the number of those currently needed
+            for (int j = newLocations.Count; j < hexTileContainer.Count; j++)
             {
-                highlights[j].SetActive(false);
+                hexTileContainer[j].SetActive(false);
             }
         }
     }
