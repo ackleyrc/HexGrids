@@ -127,6 +127,7 @@ GameObject:
   - component: {fileID: 33873942}
   - component: {fileID: 33873941}
   - component: {fileID: 33873945}
+  - component: {fileID: 33873947}
   - component: {fileID: 33873946}
   m_Layer: 0
   m_Name: DemoManager
@@ -150,6 +151,7 @@ MonoBehaviour:
   drawModeLine: {fileID: 33873942}
   drawModeRange: {fileID: 33873941}
   drawModeObstacle: {fileID: 33873945}
+  drawModePathFind: {fileID: 33873947}
   drawModeReachable: {fileID: 33873946}
   currentCoordDisplay: 0
 --- !u!4 &33873940
@@ -242,6 +244,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9fd49ae7cc41d0d43aea2330088ab760, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &33873947
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 33873938}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f890e171893c0049b764021e746be40, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &64396264
@@ -366,6 +379,8 @@ MonoBehaviour:
     - m_Text: Range
       m_Image: {fileID: 0}
     - m_Text: Obstacle
+      m_Image: {fileID: 0}
+    - m_Text: Path Find
       m_Image: {fileID: 0}
     - m_Text: Reachable
       m_Image: {fileID: 0}

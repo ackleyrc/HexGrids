@@ -159,6 +159,43 @@ public class HexGrid
         return reachable;
     }
 
+    public List<Cube> PathFindBFS(Cube start, Cube target, CubeFilterCriteria criteria)
+    {
+        Dictionary<Cube, Cube> previous = new Dictionary<Cube, Cube>();
+
+        Queue<Cube> queue = new Queue<Cube>();
+        queue.Enqueue(start);
+
+        while (queue.Count > 0)
+        {
+            Cube currentCube = queue.Dequeue();
+            foreach (Cube neighbor in GetNeighbors(currentCube))
+            {
+                if (previous.ContainsKey(neighbor) || !criteria(neighbor))
+                {
+                    continue;
+                }
+
+                previous[neighbor] = currentCube;
+                queue.Enqueue(neighbor);
+            }
+        }
+
+        List<Cube> path = new List<Cube>();
+        if (previous.ContainsKey(target))
+        {
+            Cube currentCube = target;
+            while (currentCube != start)
+            {
+                path.Add(currentCube);
+                currentCube = previous[currentCube];
+            }
+            path.Add(start);
+            path.Reverse();
+        }
+        return path;
+    }
+
     public enum Direction
     {
         N, NE, E, SE, S, SW, W, NW
