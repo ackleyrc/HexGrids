@@ -159,7 +159,7 @@ public class HexGrid
         return reachable;
     }
 
-    public List<Cube> PathFindBFS(Cube start, Cube target, CubeFilterCriteria criteria)
+    public Func<Cube, List<Cube>> GetShortestPathFunc(Cube start, CubeFilterCriteria criteria)
     {
         Dictionary<Cube, Cube> previous = new Dictionary<Cube, Cube>();
 
@@ -181,19 +181,30 @@ public class HexGrid
             }
         }
 
-        List<Cube> path = new List<Cube>();
-        if (previous.ContainsKey(target))
+        Func<Cube, List<Cube>> shortestPath = target =>
         {
-            Cube currentCube = target;
-            while (currentCube != start)
+            List<Cube> path = new List<Cube>();
+            if (previous.ContainsKey(target))
             {
-                path.Add(currentCube);
-                currentCube = previous[currentCube];
+                Cube currentCube = target;
+                while (currentCube != start)
+                {
+                    path.Add(currentCube);
+                    currentCube = previous[currentCube];
+                }
+                path.Add(start);
+                path.Reverse();
             }
-            path.Add(start);
-            path.Reverse();
-        }
-        return path;
+            return path;
+        };
+
+        return shortestPath;
+    }
+
+    public List<Cube> GetShortestPath(Cube start, Cube target, CubeFilterCriteria criteria)
+    {
+        Func<Cube, List<Cube>> shortestPath = GetShortestPathFunc(start, criteria);
+        return shortestPath(target);
     }
 
     public enum Direction

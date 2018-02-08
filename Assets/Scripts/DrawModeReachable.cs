@@ -36,14 +36,22 @@ public class DrawModeReachable : State
             // ... and the mouse is under a new hex location...
             if (cubeUnderMouse != previousCube)
             {
-                // Get the hex locations within the distance from the first hex clicked and where the mouse is now
-                List<List<Cube>> cubesReachable = hexManager.grid.Reachable(firstCube,
-                                                                        Cube.Distance(firstCube, cubeUnderMouse),
-                                                                        (x) => !hexManager.obstacles.ContainsKey(x) 
-                                                                               && hexManager.grid.GetHexes().Contains(x));
-                List<Cube> cubesToHighlight = cubesReachable.SelectMany(i => i).ToList();
-                // Replace the existing highlights to cover the determined range
-                hexManager.ReplaceHighlights(cubesToHighlight);
+                if (!hexManager.obstacles.ContainsKey(firstCube))
+                {
+                    // Get the hex locations within the distance from the first hex clicked and where the mouse is now
+                    List<List<Cube>> cubesReachable = hexManager.grid.Reachable(firstCube,
+                                                                            Cube.Distance(firstCube, cubeUnderMouse),
+                                                                            (x) => !hexManager.obstacles.ContainsKey(x)
+                                                                                   && hexManager.grid.GetHexes().Contains(x));
+                    List<Cube> cubesToHighlight = cubesReachable.SelectMany(i => i).ToList();
+                    // Replace the existing highlights to cover the determined range
+                    hexManager.ReplaceHighlights(cubesToHighlight);
+                    hexManager.ReplaceWarningTiles(new List <Cube>());
+                }
+                else
+                {
+                    hexManager.ReplaceWarningTiles(new List<Cube> { firstCube });
+                }
             }
         }
         // Otherwise, if left mouse button has been released or is not held and a new hex has been moused over...
@@ -51,6 +59,7 @@ public class DrawModeReachable : State
         {
             // Highlight just the hex currently under the mouse
             hexManager.ReplaceHighlights(cubeUnderMouse);
+            hexManager.ReplaceWarningTiles(new List<Cube>());
         }
 
         // Make note of the hex currently under the mouse this frame for comparison next frame

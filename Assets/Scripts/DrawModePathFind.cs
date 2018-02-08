@@ -44,7 +44,7 @@ public class DrawModePathFind : State
                 if (criteria(firstCube))
                 {
                     // Get the hex locations that form a line between where the mouse was first clicked and where it is now
-                    path = hexManager.grid.PathFindBFS(firstCube, cubeUnderMouse, (x) => criteria(x));
+                    path = hexManager.grid.GetShortestPath(firstCube, cubeUnderMouse, (x) => criteria(x));
                 }
 
                 if (path.Count > 0)
