@@ -24,6 +24,8 @@ public class HexManager : MonoBehaviour {
     [HideInInspector]
     public Dictionary<Cube, GameObject> obstacles = new Dictionary<Cube, GameObject>();
 
+    List<GameObject> warningTiles = new List<GameObject>();
+
     public HexGrid grid = new HexGrid();
     public Dictionary<Cube, GameObject> hexes = new Dictionary<Cube, GameObject>();
 
@@ -109,6 +111,11 @@ public class HexManager : MonoBehaviour {
         }
         // Reset tentative list for next time
         tentativeObstacleRemovals = new List<GameObject>();
+    }
+
+    public void ReplaceWarningTiles(List<Cube> newLocations)
+    {
+        ReplaceHexTiles(newLocations, warningTiles, warningPrefab);
     }
 
     private void ReplaceHexTiles(List<Cube> newLocations, List<GameObject> hexTileContainer, GameObject hexTilePrefab)
