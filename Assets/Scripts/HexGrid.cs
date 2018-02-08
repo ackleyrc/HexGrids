@@ -427,6 +427,16 @@ public class Cube
         return new Cube(a.q - b.q, a.r - b.r, a.s - b.s);
     }
 
+    public static Cube operator *(int c, Cube a)
+    {
+        return new Cube(c * a.q, c * a.r, c * a.s);
+    }
+
+    public static Cube operator *(Cube a, int c)
+    {
+        return c * a;
+    }
+
     public override bool Equals(object obj)
     {
         if (obj is Cube)
@@ -515,6 +525,16 @@ public class Axial
     public static Axial operator -(Axial a, Axial b)
     {
         return new Axial(a.q - b.q, a.r - b.r);
+    }
+
+    public static Axial operator *(int c, Axial a)
+    {
+        return (c * new Cube(a.q, a.r)).ToAxial();
+    }
+
+    public static Axial operator *(Axial a, int c)
+    {
+        return c * a;
     }
 
     public override bool Equals(object obj)
