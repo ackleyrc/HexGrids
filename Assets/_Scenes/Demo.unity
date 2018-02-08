@@ -129,6 +129,7 @@ GameObject:
   - component: {fileID: 33873945}
   - component: {fileID: 33873947}
   - component: {fileID: 33873946}
+  - component: {fileID: 33873948}
   m_Layer: 0
   m_Name: DemoManager
   m_TagString: Untagged
@@ -153,6 +154,7 @@ MonoBehaviour:
   drawModeObstacle: {fileID: 33873945}
   drawModePathFind: {fileID: 33873947}
   drawModeReachable: {fileID: 33873946}
+  drawModeRing: {fileID: 33873948}
   currentCoordDisplay: 0
 --- !u!4 &33873940
 Transform:
@@ -255,6 +257,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7f890e171893c0049b764021e746be40, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &33873948
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 33873938}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 21f795bcf500baf47b2d0a7fbbb329c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &64396264
@@ -383,6 +396,8 @@ MonoBehaviour:
     - m_Text: Path Find
       m_Image: {fileID: 0}
     - m_Text: Reachable
+      m_Image: {fileID: 0}
+    - m_Text: Ring
       m_Image: {fileID: 0}
   m_OnValueChanged:
     m_PersistentCalls:

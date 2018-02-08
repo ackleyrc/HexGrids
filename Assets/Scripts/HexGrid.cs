@@ -207,6 +207,35 @@ public class HexGrid
         return shortestPath(target);
     }
 
+    /// <summary>
+    /// Returns a list of the Cube coordinates of the hexes forming 
+    /// a ring around the provided center at radius distance away.
+    /// </summary>
+    /// <param name="center"></param>
+    /// <param name="radius"></param>
+    /// <returns></returns>
+    public List<Cube> GetRing(Cube center, int radius)
+    {
+        if (radius == 0)
+        {
+            return new List<Cube> { center };
+        }
+
+        List<Cube> ring = new List<Cube>();
+        Cube currentCube = center + (Mathf.Abs(radius) * cubeDirections[4]);
+        // Iterate through each direction
+        foreach (int i in alignment == Alignment.Horizontal ? hDirections.Keys : vDirections.Keys)
+        {
+            // The length side of the ring is equal to the radius 
+            for (int j = 0; j < Mathf.Abs(radius); j++)
+            {
+                ring.Add(currentCube);
+                currentCube = GetNeighbor(currentCube, (Direction) i);
+            }
+        }
+        return ring;
+    }
+
     public enum Direction
     {
         N, NE, E, SE, S, SW, W, NW
